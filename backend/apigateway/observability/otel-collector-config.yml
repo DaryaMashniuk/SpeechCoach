@@ -1,0 +1,38 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch: {}
+  attributes:
+    actions:
+      - key: service
+        from_attribute: service.name
+        action: insert
+      - key: pod
+        from_attribute: service.instance.id
+        action: insert
+      - key: namespace
+        from_attribute: k8s.namespace.name
+        action: insert
+      - key: namespace
+        value: "default"
+        action: upsert
+
+exporters:
+
+  otlp/tempo:
+    endpoint: "tempo:4317"
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [attributes,batch]
+      exporters: [otlp/tempo]
