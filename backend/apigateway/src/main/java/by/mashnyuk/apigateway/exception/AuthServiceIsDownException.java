@@ -1,4 +1,4 @@
-package com.innowise.apigateway.exception;
+package by.mashnyuk.apigateway.exception;
 
 public class AuthServiceIsDownException extends RuntimeException {
   public AuthServiceIsDownException() {

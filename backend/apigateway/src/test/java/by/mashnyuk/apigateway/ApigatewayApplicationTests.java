@@ -1,4 +1,4 @@
-package com.innowise.apigateway;
+package by.mashnyuk.apigateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,8 +1,8 @@
-package com.innowise.apigateway.filter;
+package by.mashnyuk.apigateway.filter;
 
-import com.innowise.apigateway.client.AuthServiceClient;
-import com.innowise.apigateway.exception.AuthServiceIsDownException;
-import com.innowise.apigateway.exception.TokenValidationException;
+import by.mashnyuk.apigateway.client.AuthServiceClient;
+import by.mashnyuk.apigateway.exception.AuthServiceIsDownException;
+import by.mashnyuk.apigateway.exception.TokenValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;

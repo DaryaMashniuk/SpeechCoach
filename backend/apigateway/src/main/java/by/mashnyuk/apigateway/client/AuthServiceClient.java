@@ -1,13 +1,13 @@
-package com.innowise.apigateway.client;
+package by.mashnyuk.apigateway.client;
 
-import com.innowise.apigateway.exception.AuthServiceIsDownException;
-import com.innowise.apigateway.exception.TokenValidationException;
+import by.mashnyuk.apigateway.exception.AuthServiceIsDownException;
+import by.mashnyuk.apigateway.exception.TokenValidationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import com.innowise.apigateway.model.ValidationResponseDto;
+import by.mashnyuk.apigateway.model.ValidationResponseDto;
 
 import java.util.Map;
 

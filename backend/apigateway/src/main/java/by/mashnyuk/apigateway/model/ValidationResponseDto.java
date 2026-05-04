@@ -1,4 +1,4 @@
-package com.innowise.apigateway.model;
+package by.mashnyuk.apigateway.model;
 
 import lombok.Builder;
 import lombok.Data;

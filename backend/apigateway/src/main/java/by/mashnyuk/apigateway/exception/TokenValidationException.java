@@ -1,4 +1,4 @@
-package com.innowise.apigateway.exception;
+package by.mashnyuk.apigateway.exception;
 
 public class TokenValidationException extends RuntimeException {
   public TokenValidationException(String message) {
