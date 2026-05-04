@@ -12,42 +12,15 @@ public class GatewayConfig {
   @Value("${authservice.url}")
   private String authServiceUrl;
 
-  @Value("${orderservice.url}")
-  private String orderServiceUrl;
-
-  @Value("${userservice.url}")
-  private String userServiceUrl;
-
-  @Value("${paymentservice.url}")
-  private String paymentServiceUrl;
-
   @Bean
   public RouteLocator customRoutes(RouteLocatorBuilder builder) {
     String authUrl = authServiceUrl.trim();
-    String userUrl = userServiceUrl.trim();
-    String orderUrl = orderServiceUrl.trim();
-    String paymentUrl = paymentServiceUrl.trim();
+
     return builder.routes()
             .route("auth-public", r -> r
-                    .path("/api/v1/auth/login", "/api/v1/auth/register", "/api/v1/auth/refresh")
+                    .path("/api/v1/auth/login", "/api/v1/auth/register", "/api/v1/auth/refresh","/api/v1/auth/validate")
                     .filters(f -> f.stripPrefix(0))
                     .uri(authUrl))
-            .route("user-service", r -> r
-                    .path("/api/v1/users/**", "/api/v1/cards/**")
-                    .filters(f -> f.stripPrefix(0))
-                    .uri(userUrl))
-            .route("auth-protected", r -> r
-                    .path("/api/v1/auth/**")
-                    .filters(f -> f.stripPrefix(0))
-                    .uri(authUrl))
-            .route("order-service", r -> r
-                    .path("/api/v1/orders/**", "/api/v1/items/**")
-                    .filters(f -> f.stripPrefix(0))
-                    .uri(orderUrl))
-            .route("payment-service", r-> r
-                    .path("/api/v1/payments/**")
-                    .filters(f -> f.stripPrefix(0))
-                    .uri(paymentUrl))
             .build();
 
   }
