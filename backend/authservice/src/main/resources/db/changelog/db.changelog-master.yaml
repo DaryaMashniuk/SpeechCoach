@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: 001-create-tables.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: 002-insert-admin.yaml
+      relativeToChangelogFile: true

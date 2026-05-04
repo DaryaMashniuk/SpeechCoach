@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-insert-admin
+      author: Darya
+      changes:
+        - insert:
+            tableName: user_info
+            columns:
+              - column:
+                  name: username
+                  value: "admin"
+              - column:
+                  name: email
+                  value: "admin@innowise.com"
+              - column:
+                  name: role
+                  value: "ADMIN"
+              - column:
+                  name: password
+                  value: "$2a$12$rrq2PLyOqAY8JYMybpA.S.oED/Ake5agxZjVtc6wmlLmd8BjlINti"
