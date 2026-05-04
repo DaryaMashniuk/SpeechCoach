@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ea4aa8e4-f2fa-4b4f-b570-9a43f368677c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innowise/apigateway/config/GatewayConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innowise/apigateway/config/GatewayConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innowise/apigateway/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innowise/apigateway/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application-docker.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-docker.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="jdkForImporter" value="21" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="MavenRunner">
+    <option name="jreName" value="21" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="3AUctjrpx0qflX8hhDHwYrOoEO7" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.apigateway [clean].executor": "Run",
+    "Maven.apigateway [install].executor": "Run",
+    "Maven.apigateway [package].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.ApigatewayApplication.executor": "Run",
+    "git-widget-placeholder": "tasks/MNT-0",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Projects/java_projects/Internship/ShopProject/authservice",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.importing",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Projects\java_projects\Internship\ShopProject\apigateway\observability\grafana" />
+      <recent name="C:\Projects\java_projects\Internship\ShopProject\apigateway" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Projects\java_projects\Internship\ShopProject\apigateway\observability\grafana\dashboards" />
+      <recent name="C:\Projects\java_projects\Internship\ShopProject\apigateway\observability\grafana\datasources" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="ApigatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="apigateway" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.innowise.apigateway.ApigatewayApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ea4aa8e4-f2fa-4b4f-b570-9a43f368677c" name="Changes" comment="" />
+      <created>1772650806060</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1772650806060</updated>
+      <workItem from="1772650807172" duration="2656000" />
+      <workItem from="1772655156609" duration="65000" />
+      <workItem from="1772694456581" duration="1108000" />
+      <workItem from="1772696070948" duration="4255000" />
+      <workItem from="1772699269892" duration="1596000" />
+      <workItem from="1772737197577" duration="2521000" />
+      <workItem from="1772740575633" duration="49000" />
+      <workItem from="1772740654834" duration="5980000" />
+      <workItem from="1772746990860" duration="1309000" />
+      <workItem from="1772748540152" duration="7013000" />
+      <workItem from="1772756501106" duration="1494000" />
+      <workItem from="1773124109704" duration="631000" />
+      <workItem from="1773239046874" duration="1196000" />
+      <workItem from="1773266622209" duration="82000" />
+      <workItem from="1773975657149" duration="8740000" />
+      <workItem from="1774380060437" duration="2648000" />
+      <workItem from="1774426499586" duration="973000" />
+      <workItem from="1775576804947" duration="1444000" />
+      <workItem from="1775641808481" duration="894000" />
+      <workItem from="1775706144450" duration="611000" />
+      <workItem from="1776172642913" duration="66000" />
+      <workItem from="1776266386971" duration="2079000" />
+      <workItem from="1776277174116" duration="258000" />
+      <workItem from="1776489792845" duration="2508000" />
+      <workItem from="1776590943518" duration="29596000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
