@@ -1,0 +1,68 @@
+volumes:
+  auth_postgres_data:
+    driver: local
+
+
+# include:
+#  - observability/docker-compose-monitoring.yml
+
+services:
+
+  auth_db:
+    image: postgres:15-alpine
+    container_name: auth_db
+    restart: unless-stopped
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${AUTH_DB_NAME}
+    volumes:
+      - auth_postgres_data:/var/lib/postgresql/data
+    networks:
+      - my_network
+
+  authservice:
+    build: ../authservice
+    container_name: authentication-service
+    restart: unless-stopped
+    depends_on:
+      - auth_db
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://auth_db:5432/${AUTH_DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - JWT_REFRESH_TOKEN_EXPIRATION=${JWT_REFRESH_TOKEN_EXPIRATION}
+      - USER_SERVICE_URL=http://user-service:8081
+    ports:
+      - "8082:8082"
+    networks:
+      - my_network
+
+  gateway-service:
+    build:
+      context: .
+    container_name: gateway-service
+    restart: unless-stopped
+    depends_on:
+      - authservice
+     # - otel-collector
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - AUTHSERVICE_URL=http://authentication-service:8082
+      - USERSERVICE_URL=http://user-service:8081
+      - ORDERSERVICE_URL=http://order-service:8080
+      - PAYMENTSERVICE_URL=http://payment-service:8084
+      - AUTHSERVICE_WHITELIST=/api/v1/auth/login,/api/v1/auth/register,/api/v1/auth/refresh
+    ports:
+      - "8083:8083"
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
