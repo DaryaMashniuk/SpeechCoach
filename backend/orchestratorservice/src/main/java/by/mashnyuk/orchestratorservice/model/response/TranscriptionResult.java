@@ -1,5 +1,7 @@
-package by.mashnyuk.transcriptservice.model.dto;
+package by.mashnyuk.orchestratorservice.model.response;
 
+import by.mashnyuk.orchestratorservice.model.request.AudioMetricsDto;
+import by.mashnyuk.orchestratorservice.model.request.TranscriptionSegment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

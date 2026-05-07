@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/transcription/api/v1")
+@RequestMapping("/api/v1/transcription")
 @RequiredArgsConstructor
 public class TranscriptionController {
 

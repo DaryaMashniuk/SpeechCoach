@@ -1,5 +1,6 @@
-package by.mashnyuk.intelligenceservice.model.dto.response;
+package by.mashnyuk.orchestratorservice.model.response;
 
+import by.mashnyuk.orchestratorservice.model.request.TranscriptionSegment;
 import lombok.Builder;
 
 import java.util.List;
@@ -16,5 +17,6 @@ public record IntelligenceAnalyzeResponse(
         List<String> tips,
         String summary,
         String structuredAnalysisJson,
-        String transcript
+        List<TranscriptionSegment> transcription,
+        String transcriptionText
 ) {}
