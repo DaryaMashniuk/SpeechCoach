@@ -1,7 +1,7 @@
 package by.mashnyuk.transcriptservice.service;
 
-import by.mashnyuk.transcriptservice.model.AudioAnalysisReport;
+import by.mashnyuk.transcriptservice.model.dto.response.AudioMetricsDto;
 
 public interface DigitalSignalProcessor {
-  AudioAnalysisReport analyze(float[] audioData);
+  AudioMetricsDto analyze(float[] audioData);
 }

@@ -1,7 +1,10 @@
-package by.mashnyuk.transcriptservice.model.dto;
+package by.mashnyuk.transcriptservice.model.dto.response;
+
+import lombok.Builder;
 
 import java.util.List;
 
+@Builder
 public record AudioMetricsDto(
         double avgPitchHz,
         double minPitchHz,

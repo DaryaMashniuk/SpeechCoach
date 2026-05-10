@@ -1,6 +1,7 @@
-package by.mashnyuk.transcriptservice.model.dto;
+package by.mashnyuk.orchestratorservice.model.request;
 
-import by.mashnyuk.transcriptservice.model.Language;
+
+import by.mashnyuk.orchestratorservice.model.Language;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,5 +12,7 @@ public class TranscriptionRequest {
   private float[] pcmData;
 
   private Language language;
+
+  private String meetingContext;
 
 }

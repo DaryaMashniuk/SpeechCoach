@@ -1,7 +1,7 @@
 package by.mashnyuk.orchestratorservice.client;
 
-import by.mashnyuk.orchestratorservice.model.Language;
-import by.mashnyuk.orchestratorservice.model.response.TranscriptionResult;
+import by.mashnyuk.orchestratorservice.model.request.TranscriptionRequest;
+import by.mashnyuk.orchestratorservice.model.response.AudioAnalysisResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -12,5 +12,5 @@ import org.springframework.web.bind.annotation.PostMapping;
 public interface AudioAnalysisClient {
 
   @PostMapping("/api/v1/transcription")
-  TranscriptionResult transcribe(float[] audioData, Language language);
+  AudioAnalysisResult transcribe(TranscriptionRequest transcriptionRequest);
 }

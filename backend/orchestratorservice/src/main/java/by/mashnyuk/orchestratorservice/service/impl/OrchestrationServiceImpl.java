@@ -5,12 +5,14 @@ import by.mashnyuk.orchestratorservice.client.IntelligenceAnalysisClient;
 import by.mashnyuk.orchestratorservice.model.AnalysisStatus;
 import by.mashnyuk.orchestratorservice.model.Language;
 import by.mashnyuk.orchestratorservice.model.request.IntelligenceAnalyzeRequest;
+import by.mashnyuk.orchestratorservice.model.request.TranscriptionRequest;
 import by.mashnyuk.orchestratorservice.model.response.IntelligenceAnalyzeResponse;
-import by.mashnyuk.orchestratorservice.model.response.TranscriptionResult;
+import by.mashnyuk.orchestratorservice.model.response.AudioAnalysisResult;
 import by.mashnyuk.orchestratorservice.service.AnalysisJobsService;
 import by.mashnyuk.orchestratorservice.service.AnalysisResultsService;
 import by.mashnyuk.orchestratorservice.service.OrchestrationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,11 +25,14 @@ public class OrchestrationServiceImpl implements OrchestrationService {
   private final AnalysisResultsService analysisResultsService;
 
   @Override
-  public void startAnalysis(Long audioId, float[] audioData, Language language) {
+  @Async
+  public void startAnalysisForTraining(Long audioId, float[] audioData, Language language, String meetingContext) {
     try {
       analysisJobsService.updateJobStatus(audioId, AnalysisStatus.WAITING_AUDIO_SERVICE,null);
 
-      TranscriptionResult audioAnalysisResult = audioAnalysisClient.transcribe(audioData,language);
+      TranscriptionRequest audioRequest = new TranscriptionRequest(audioData,language,meetingContext);
+
+      AudioAnalysisResult audioAnalysisResult = audioAnalysisClient.transcribe(audioRequest);
 
       analysisJobsService.updateJobStatus(audioId,AnalysisStatus.WAITING_INTELLIGENCE_SERVICE,null);
 

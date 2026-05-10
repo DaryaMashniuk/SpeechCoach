@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class TranscriptionResult {
+public class AudioAnalysisResult {
   List<TranscriptionSegment> segments;
   String transcription;
   AudioMetricsDto audioMetrics;
