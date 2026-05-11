@@ -1,4 +1,4 @@
-package by.mashnyuk.transcriptservice.model.dto;
+package by.mashnyuk.transcriptservice.model.dto.response;
 
 import lombok.Builder;
 

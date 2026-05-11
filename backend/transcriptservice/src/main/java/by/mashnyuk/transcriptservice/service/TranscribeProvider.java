@@ -1,7 +1,7 @@
 package by.mashnyuk.transcriptservice.service;
 
-import by.mashnyuk.transcriptservice.model.dto.TranscriptionRequest;
-import by.mashnyuk.transcriptservice.model.dto.TranscriptionResult;
+import by.mashnyuk.transcriptservice.model.dto.request.TranscriptionRequest;
+import by.mashnyuk.transcriptservice.model.dto.response.TranscriptionResult;
 
 public interface TranscribeProvider {
   TranscriptionResult transcribe(TranscriptionRequest request);

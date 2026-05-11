@@ -1,9 +1,9 @@
 package by.mashnyuk.transcriptservice.service.impl;
 
 import by.mashnyuk.transcriptservice.exceptions.TranscriptionException;
-import by.mashnyuk.transcriptservice.model.dto.TranscriptionRequest;
-import by.mashnyuk.transcriptservice.model.dto.TranscriptionResult;
-import by.mashnyuk.transcriptservice.model.dto.TranscriptionSegment;
+import by.mashnyuk.transcriptservice.model.dto.request.TranscriptionRequest;
+import by.mashnyuk.transcriptservice.model.dto.response.TranscriptionResult;
+import by.mashnyuk.transcriptservice.model.dto.response.TranscriptionSegment;
 import by.mashnyuk.transcriptservice.nativelib.internal.whisper_full_params;
 import by.mashnyuk.transcriptservice.service.TranscribeProvider;
 import jakarta.annotation.PostConstruct;
@@ -26,7 +26,8 @@ public class WhisperTranscribeProvider implements TranscribeProvider {
 
   private static final Logger logger = LogManager.getLogger(WhisperTranscribeProvider.class);
 
-  private static final String MODEL_PATH = "../../infrastructure/models/whisper/ggml-base.bin";
+  //private static final String MODEL_PATH = "../../infrastructure/models/whisper/ggml-base.bin";
+  private static final String MODEL_PATH = "backend/infrastructure/models/whisper/ggml-base.bin";
   private static final int STRATEGY_GREEDY = 0;
 
   private MemorySegment ctx;

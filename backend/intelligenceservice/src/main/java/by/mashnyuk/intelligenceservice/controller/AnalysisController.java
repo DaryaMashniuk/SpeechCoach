@@ -2,6 +2,7 @@ package by.mashnyuk.intelligenceservice.controller;
 
 import by.mashnyuk.intelligenceservice.model.dto.request.IntelligenceAnalyzeRequest;
 import by.mashnyuk.intelligenceservice.model.dto.response.IntelligenceAnalyzeResponse;
+import by.mashnyuk.intelligenceservice.service.IntelligenceAnalysisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,15 +20,18 @@ import java.util.Map;
 public class AnalysisController {
 
   private final OllamaChatModel chatModel;
+  private final IntelligenceAnalysisService analysisService;
 
-  @GetMapping("/generate")
-  public Map<String,String> generate(@RequestParam(value = "message") String message) {
-    return Map.of("generation", this.chatModel.call(message));
-  }
 
   @PostMapping("/report")
   public IntelligenceAnalyzeResponse analyze(@RequestBody IntelligenceAnalyzeRequest request) {
-    //TODO: fill in report data
-    return null;
+
+    return analysisService.fullAnalysis(request);
+  }
+
+  @PostMapping("/summary")
+  public String summarize(@RequestBody String text) {
+    //TODO write logic for this option
+    return "Краткое содержание встречи...";
   }
 }

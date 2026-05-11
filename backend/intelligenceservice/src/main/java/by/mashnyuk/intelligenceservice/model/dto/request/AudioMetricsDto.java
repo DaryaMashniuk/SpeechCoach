@@ -1,5 +1,7 @@
 package by.mashnyuk.intelligenceservice.model.dto.request;
 
+import java.util.List;
+
 public record AudioMetricsDto(
         double avgPitchHz,
         double minPitchHz,
@@ -14,5 +16,6 @@ public record AudioMetricsDto(
         int pauseCount,
         double avgPauseMs,
         double maxPauseMs,
+        double durationMs,
         List<AudioPointDto> timeline
 ) {}

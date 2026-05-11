@@ -15,5 +15,6 @@ public record IntelligenceAnalyzeResponse(
         List<String> keyErrors,
         List<String> tips,
         String summary,
-        String structuredAnalysisJson
+        String structuredAnalysisJson,
+        String transcript
 ) {}

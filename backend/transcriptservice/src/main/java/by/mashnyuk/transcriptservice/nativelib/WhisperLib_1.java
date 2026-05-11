@@ -67,7 +67,7 @@ public class WhisperLib_1 {
 
     String libPathStr = System.getenv("WHISPER_LIB_PATH");
     if (libPathStr == null) {
-      libPathStr = System.getProperty("user.dir") + "/libs/whisper.dll";
+      libPathStr = System.getProperty("user.dir") + "/backend/transcriptservice/libs/whisper.dll";
     }
 
     java.nio.file.Path libPath = java.nio.file.Path.of(libPathStr).toAbsolutePath();
@@ -82,7 +82,8 @@ public class WhisperLib_1 {
         loadIfExist(libDir.resolve("vcruntime140_1.dll"));
         loadIfExist(libDir.resolve("msvcp140.dll"));
         loadIfExist(libDir.resolve("vcomp140.dll"));
-
+        loadIfExist(libDir.resolve("ggml-base.dll"));
+        loadIfExist(libDir.resolve("ggml-cpu.dll"));
         System.load(libDir.resolve("ggml.dll").toString());
         System.out.println("DEBUG: ggml.dll loaded successfully");
       }

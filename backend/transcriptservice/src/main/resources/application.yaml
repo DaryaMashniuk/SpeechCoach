@@ -1,9 +1,15 @@
 spring:
   application:
     name: transcriptservice
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 
 whisper:
-  model-path: ../infrastructure/models/whisper/ggml-base.bin
+  model-path: backend/infrastructure/models/whisper/ggml-base.bin
 
 ffmpeg-path: C:\Projects\java_projects\speechcoach\backend\transcriptservice\bin\ffmpeg.exe
+server:
+  port: 8081
