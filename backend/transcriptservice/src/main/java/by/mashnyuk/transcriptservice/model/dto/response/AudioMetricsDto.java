@@ -19,5 +19,6 @@ public record AudioMetricsDto(
         int pauseCount,
         double avgPauseMs,
         double maxPauseMs,
+        double durationMs,
         List<AudioPointDto> timeline
 ) {}

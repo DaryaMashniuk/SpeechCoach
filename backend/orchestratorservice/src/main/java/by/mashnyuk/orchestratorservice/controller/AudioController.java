@@ -1,38 +1,56 @@
 package by.mashnyuk.orchestratorservice.controller;
 
-import by.mashnyuk.orchestratorservice.model.Language;
+import by.mashnyuk.orchestratorservice.model.Presentation;
 import by.mashnyuk.orchestratorservice.model.request.PresentationRequest;
-import by.mashnyuk.orchestratorservice.service.AnalysisJobsService;
+import by.mashnyuk.orchestratorservice.service.OrchestrationService;
 import by.mashnyuk.orchestratorservice.service.PresentationService;
 import by.mashnyuk.orchestratorservice.util.AudioConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/orchestrator/api/v1")
+@RequestMapping("/api/v1/orchestrator")
 @RequiredArgsConstructor
 public class AudioController {
 
   private final AudioConverter audioConverter;
   private final PresentationService presentationService;
-  private final AnalysisJobsService analysisJobsService;
+  private final OrchestrationService orchestrationService;
 
   @PostMapping(
-          path = "/",
+          path = "/training",
           consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}
   )
-  public void transcribe(@RequestPart MultipartFile file, PresentationRequest presentationRequest) throws IOException {
-    float[] audioData = audioConverter.convertToWhisperFormat(file);
-    presentationRequest.setPcmData(audioData);
-    presentationService.createPresentation(presentationRequest);
+  public UUID startTraining(@ModelAttribute PresentationRequest request) throws IOException {
+    float[] audioData = audioConverter.convertToWhisperFormat(request.getFile());
 
-   // return transcribeProvider.transcribe(request);
+    Presentation presentation = presentationService.createPresentation(request);
+
+    return orchestrationService.startAnalysisForTraining(
+            presentation,
+            audioData
+    );
+  }
+
+  @PostMapping(path = "/meeting", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public UUID startMeeting(@ModelAttribute PresentationRequest request) throws IOException {
+    float[] pcmData = audioConverter.convertToWhisperFormat(request.getFile());
+
+    Presentation presentation = presentationService.createPresentation(request);
+    return orchestrationService.startMeetingTranscription(presentation, pcmData);
+  }
+
+  @DeleteMapping("/{id}")
+  public void delete(@PathVariable Long id) {
+    presentationService.deletePresentation(id);
   }
 }

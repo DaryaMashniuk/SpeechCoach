@@ -17,6 +17,7 @@ import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Entity
 @Table(name = "analysis_results")
@@ -31,7 +32,7 @@ public class AnalysisResults extends Auditable {
   private Long id;
 
   @Column(name="analysis_job_id",unique = true, nullable = false)
-  private Long analysisJobId;
+  private UUID analysisJobId;
 
   @JdbcTypeCode(SqlTypes.JSON)
   private AudioMetricsDto metrics;

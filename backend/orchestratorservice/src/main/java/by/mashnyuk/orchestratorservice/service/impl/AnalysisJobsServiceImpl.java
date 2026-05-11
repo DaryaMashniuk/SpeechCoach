@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -17,17 +18,18 @@ public class AnalysisJobsServiceImpl implements AnalysisJobsService {
   private final AnalysisJobsRepository analysisJobsRepository;
 
   @Override
-  public void createJob(Long audioId, AnalysisType type) {
+  public UUID createJob(Long presentationId, AnalysisType type) {
     AnalysisJobs analysisJobs = AnalysisJobs.builder()
-            .audioId(audioId)
+            .audioId(presentationId)
             .analysisType(type)
             .analysisStatus(AnalysisStatus.PENDING)
             .build();
-    analysisJobsRepository.save(analysisJobs);
+
+    return analysisJobsRepository.save(analysisJobs).getId();
   }
 
   @Override
-  public void updateJobStatus(Long audioId, AnalysisStatus status, String errorMessage) {
+  public void updateJobStatus(UUID audioId, AnalysisStatus status, String errorMessage) {
     analysisJobsRepository.findById(audioId).ifPresent(job -> {
       job.setAnalysisStatus(status);
       if (errorMessage != null) job.setErrorMessage(errorMessage);

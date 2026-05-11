@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -16,10 +17,10 @@ public class AnalysisResultsServiceImpl implements AnalysisResultsService {
   private final AnalysisResultsRepository analysisResultsRepository;
 
   @Override
-  public void saveAnalysisResult(Long audioId, IntelligenceAnalyzeResponse response) {
+  public void saveAnalysisResult(UUID jobId, IntelligenceAnalyzeResponse response) {
     // TODO sync dto from Intelligence service to the one saved in the result
     AnalysisResults result = AnalysisResults.builder()
-            .analysisJobId(audioId)
+            .analysisJobId(jobId)
             .transcript(response.transcription())
             .tips(response.tips())
             .scores(Map.of(

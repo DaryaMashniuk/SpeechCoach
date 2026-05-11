@@ -3,7 +3,9 @@ package by.mashnyuk.orchestratorservice.service.impl;
 import by.mashnyuk.orchestratorservice.client.AudioAnalysisClient;
 import by.mashnyuk.orchestratorservice.client.IntelligenceAnalysisClient;
 import by.mashnyuk.orchestratorservice.model.AnalysisStatus;
+import by.mashnyuk.orchestratorservice.model.AnalysisType;
 import by.mashnyuk.orchestratorservice.model.Language;
+import by.mashnyuk.orchestratorservice.model.Presentation;
 import by.mashnyuk.orchestratorservice.model.request.IntelligenceAnalyzeRequest;
 import by.mashnyuk.orchestratorservice.model.request.TranscriptionRequest;
 import by.mashnyuk.orchestratorservice.model.response.IntelligenceAnalyzeResponse;
@@ -14,6 +16,9 @@ import by.mashnyuk.orchestratorservice.service.OrchestrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -26,34 +31,65 @@ public class OrchestrationServiceImpl implements OrchestrationService {
 
   @Override
   @Async
-  public void startAnalysisForTraining(Long audioId, float[] audioData, Language language, String meetingContext) {
+  public UUID startAnalysisForTraining(Presentation presentation, float[] audioData) {
+    UUID jobId = analysisJobsService.createJob(presentation.getId(), AnalysisType.FULL_SPEECH_COACH);
+
+    runTrainingPipeline(jobId,presentation,audioData,presentation.getLanguage());
+    return jobId;
+  }
+
+  @Async
+  protected void runTrainingPipeline(UUID jobId, Presentation presentation, float[] audioData, Language language) {
     try {
-      analysisJobsService.updateJobStatus(audioId, AnalysisStatus.WAITING_AUDIO_SERVICE,null);
+      analysisJobsService.updateJobStatus(jobId, AnalysisStatus.WAITING_AUDIO_SERVICE, null);
 
-      TranscriptionRequest audioRequest = new TranscriptionRequest(audioData,language,meetingContext);
+      TranscriptionRequest audioRequest = new TranscriptionRequest(
+              audioData, language, presentation.getDescription());
+      AudioAnalysisResult audioResult = audioAnalysisClient.transcribe(audioRequest);
 
-      AudioAnalysisResult audioAnalysisResult = audioAnalysisClient.transcribe(audioRequest);
+      analysisJobsService.updateJobStatus(jobId, AnalysisStatus.WAITING_INTELLIGENCE_SERVICE, null);
 
-      analysisJobsService.updateJobStatus(audioId,AnalysisStatus.WAITING_INTELLIGENCE_SERVICE,null);
-
-      //TODO think if intelligence service needs user and audioId
-      IntelligenceAnalyzeRequest request = new IntelligenceAnalyzeRequest(
-              audioId,
-              null,
+      IntelligenceAnalyzeRequest aiRequest = new IntelligenceAnalyzeRequest(
+              presentation.getId(),
+              presentation.getUserId(),
               language.toString(),
-              audioAnalysisResult.getTranscription(),
-              audioAnalysisResult.getSegments(),
-              audioAnalysisResult.getAudioMetrics()
+              audioResult.getTranscription(),
+              audioResult.getSegments(),
+              audioResult.getAudioMetrics()
       );
 
-      IntelligenceAnalyzeResponse finalResponse = intelligenceAnalysisClient.analyze(request);
+      IntelligenceAnalyzeResponse aiResponse = intelligenceAnalysisClient.analyze(aiRequest);
 
-      analysisResultsService.saveAnalysisResult(audioId,finalResponse);
-      analysisJobsService.updateJobStatus(audioId,AnalysisStatus.DONE,null);
+      analysisResultsService.saveAnalysisResult(jobId, aiResponse);
+      analysisJobsService.updateJobStatus(jobId, AnalysisStatus.DONE, null);
     } catch (Exception e) {
-      //TODO implement retry logic
-      //TODO custom exceptions
-      analysisJobsService.updateJobStatus(audioId,AnalysisStatus.FAILED, e.getMessage());
+      analysisJobsService.updateJobStatus(jobId, AnalysisStatus.FAILED, e.getMessage());
     }
   }
+
+  @Override
+  public UUID startMeetingTranscription(Presentation presentation, float[] audioData) {
+    UUID jobId = analysisJobsService.createJob(presentation.getId(), AnalysisType.MEETING_TRANSCRIPTION);
+
+    CompletableFuture.runAsync(() -> {
+      try {
+        analysisJobsService.updateJobStatus(jobId, AnalysisStatus.WAITING_AUDIO_SERVICE, null);
+
+        TranscriptionRequest audioRequest = new TranscriptionRequest(audioData, presentation.getLanguage(), "Meeting Summary Mode");
+        AudioAnalysisResult audioResult = audioAnalysisClient.transcribe(audioRequest);
+
+        analysisJobsService.updateJobStatus(jobId, AnalysisStatus.WAITING_INTELLIGENCE_SERVICE, null);
+
+        IntelligenceAnalyzeResponse aiResponse = intelligenceAnalysisClient.summarize(audioResult.getTranscription());
+
+        analysisResultsService.saveAnalysisResult(jobId, aiResponse);
+        analysisJobsService.updateJobStatus(jobId, AnalysisStatus.DONE, null);
+      } catch (Exception e) {
+        analysisJobsService.updateJobStatus(jobId, AnalysisStatus.FAILED, e.getMessage());
+      }
+    });
+
+    return jobId;
+  }
+}
 }

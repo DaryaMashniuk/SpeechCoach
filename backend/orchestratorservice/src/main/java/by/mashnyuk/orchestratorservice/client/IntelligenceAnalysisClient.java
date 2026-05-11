@@ -10,4 +10,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 )
 public interface IntelligenceAnalysisClient {
   IntelligenceAnalyzeResponse analyze(IntelligenceAnalyzeRequest request);
+
+  IntelligenceAnalyzeResponse summarize(String transcription);
 }

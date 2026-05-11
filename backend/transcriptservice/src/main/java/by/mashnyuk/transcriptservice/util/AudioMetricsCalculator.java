@@ -16,18 +16,25 @@ public class AudioMetricsCalculator {
 
   private static final double SILENCE_THRESHOLD = -60.0;
   private static final double TIME_FOR_SILENCE_THRESHOLD = 0.3;
+  private static final double MIN_VOICE_HZ = 50.0;
+  private static final double MAX_VOICE_HZ = 600.0;
 
   public AudioMetricsDto calculate(List<PitchesData> pitches, List<VolumeData> volumes) {
     if (volumes.isEmpty()) return AudioMetricsDto.builder().build();
 
+    List<Double> filteredPitches = pitches.stream()
+            .map(PitchesData::getPitchSPL)
+            .filter(p -> p >= MIN_VOICE_HZ && p <= MAX_VOICE_HZ)
+            .toList();
+
     double duration = volumes.get(volumes.size() - 1).getVolumeTimeMillis();
 
-    DoubleSummaryStatistics pitchStats = pitches.stream()
-            .mapToDouble(PitchesData::getPitchSPL)
+    DoubleSummaryStatistics pitchStats = filteredPitches.stream()
+            .mapToDouble(d -> d)
             .summaryStatistics();
 
     double avgPitch = pitchStats.getAverage();
-    double pitchVariance = calculateVariance(pitches.stream().mapToDouble(PitchesData::getPitchSPL).toArray(),avgPitch);
+    double pitchVariance = calculateVariance(filteredPitches.stream().mapToDouble(d -> d).toArray(),avgPitch);
 
     DoubleSummaryStatistics rmsStats = volumes.stream()
             .mapToDouble(VolumeData::getVolumeRMS)
@@ -40,8 +47,8 @@ public class AudioMetricsCalculator {
 
     return AudioMetricsDto.builder()
             .avgPitchHz(avgPitch)
-            .minPitchHz(pitchStats.getMin())
-            .maxPitchHz(pitchStats.getMax())
+            .minPitchHz(pitchStats.getMin() == Double.POSITIVE_INFINITY ? 0 : pitchStats.getMin())
+            .maxPitchHz(pitchStats.getMax() == Double.NEGATIVE_INFINITY ? 0 : pitchStats.getMax())
             .pitchVariance(pitchVariance)
             .avgRms(avgVolume)
             .maxRms(pitchStats.getMax())
@@ -49,6 +56,7 @@ public class AudioMetricsCalculator {
             .pauseCount(pauseStats.getCount())
             .avgPauseMs(pauseStats.getAverageMs())
             .maxPauseMs(pauseStats.getMaxMs())
+            .durationMs(duration)
             .silenceRatio(pauseStats.getTotalMs() / (duration * 1000))
             .speechActivityRatio(1.0 - (pauseStats.getTotalMs() / (duration * 1000)))
             .timeline(buildTimeline(pitches,volumes))

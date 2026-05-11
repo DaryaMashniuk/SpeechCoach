@@ -8,6 +8,10 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     driver-class-name: org.postgresql.Driver
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 ffmpeg-path: C:\Projects\java_projects\speechcoach\backend\transcriptservice\bin\ffmpeg.exe
 
@@ -17,3 +21,8 @@ intelligence-service:
   url: localhost:8080
 server:
   port: 8084
+minio:
+  bucket: speech-coach-audio
+  endpoint: http://localhost:9000
+  username: admin
+  password: password

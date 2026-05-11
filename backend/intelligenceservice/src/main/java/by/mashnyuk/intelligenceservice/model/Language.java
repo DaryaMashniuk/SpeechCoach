@@ -1,4 +1,4 @@
-package by.mashnyuk.orchestratorservice.model;
+package by.mashnyuk.intelligenceservice.model;
 
 public enum Language {
   auto,
