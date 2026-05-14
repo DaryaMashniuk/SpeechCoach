@@ -21,7 +21,7 @@ public class PresentationServiceImpl implements PresentationService {
   private String minioBucket;
 
   @Override
-  public Presentation createPresentation(PresentationRequest presentationRequest) {
+  public Presentation createPresentation(PresentationRequest presentationRequest,Long durationMs) {
 
     String fileId = UUID.randomUUID().toString();
 
@@ -33,6 +33,7 @@ public class PresentationServiceImpl implements PresentationService {
             .language(presentationRequest.getLanguage())
             .training(presentationRequest.isTraining())
             .userId(presentationRequest.getUserId())
+            .durationMs(durationMs)
             .sourceFileId(fileId)
             .build();
 

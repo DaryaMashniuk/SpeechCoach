@@ -10,6 +10,8 @@ import by.mashnyuk.orchestratorservice.model.request.IntelligenceAnalyzeRequest;
 import by.mashnyuk.orchestratorservice.model.request.TranscriptionRequest;
 import by.mashnyuk.orchestratorservice.model.response.IntelligenceAnalyzeResponse;
 import by.mashnyuk.orchestratorservice.model.response.AudioAnalysisResult;
+import by.mashnyuk.orchestratorservice.model.response.MeetingTranscriptionResult;
+import by.mashnyuk.orchestratorservice.model.response.TranscriptionResult;
 import by.mashnyuk.orchestratorservice.service.AnalysisJobsService;
 import by.mashnyuk.orchestratorservice.service.AnalysisResultsService;
 import by.mashnyuk.orchestratorservice.service.OrchestrationService;
@@ -30,7 +32,6 @@ public class OrchestrationServiceImpl implements OrchestrationService {
   private final AnalysisResultsService analysisResultsService;
 
   @Override
-  @Async
   public UUID startAnalysisForTraining(Presentation presentation, float[] audioData) {
     UUID jobId = analysisJobsService.createJob(presentation.getId(), AnalysisType.FULL_SPEECH_COACH);
 
@@ -45,7 +46,7 @@ public class OrchestrationServiceImpl implements OrchestrationService {
 
       TranscriptionRequest audioRequest = new TranscriptionRequest(
               audioData, language, presentation.getDescription());
-      AudioAnalysisResult audioResult = audioAnalysisClient.transcribe(audioRequest);
+      AudioAnalysisResult audioResult = audioAnalysisClient.audioAnalysis(audioRequest);
 
       analysisJobsService.updateJobStatus(jobId, AnalysisStatus.WAITING_INTELLIGENCE_SERVICE, null);
 
@@ -76,13 +77,13 @@ public class OrchestrationServiceImpl implements OrchestrationService {
         analysisJobsService.updateJobStatus(jobId, AnalysisStatus.WAITING_AUDIO_SERVICE, null);
 
         TranscriptionRequest audioRequest = new TranscriptionRequest(audioData, presentation.getLanguage(), "Meeting Summary Mode");
-        AudioAnalysisResult audioResult = audioAnalysisClient.transcribe(audioRequest);
+        TranscriptionResult audioResult = audioAnalysisClient.transcribe(audioRequest);
 
         analysisJobsService.updateJobStatus(jobId, AnalysisStatus.WAITING_INTELLIGENCE_SERVICE, null);
+        //TODO change structure for meeting transcription
+        MeetingTranscriptionResult aiResponse = intelligenceAnalysisClient.summarize(audioResult.getTranscription());
 
-        IntelligenceAnalyzeResponse aiResponse = intelligenceAnalysisClient.summarize(audioResult.getTranscription());
-
-        analysisResultsService.saveAnalysisResult(jobId, aiResponse);
+        analysisResultsService.saveTranscriptionResult(jobId, aiResponse);
         analysisJobsService.updateJobStatus(jobId, AnalysisStatus.DONE, null);
       } catch (Exception e) {
         analysisJobsService.updateJobStatus(jobId, AnalysisStatus.FAILED, e.getMessage());
@@ -91,5 +92,4 @@ public class OrchestrationServiceImpl implements OrchestrationService {
 
     return jobId;
   }
-}
 }

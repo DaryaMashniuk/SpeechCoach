@@ -57,8 +57,8 @@ public class AudioMetricsCalculator {
             .avgPauseMs(pauseStats.getAverageMs())
             .maxPauseMs(pauseStats.getMaxMs())
             .durationMs(duration)
-            .silenceRatio(pauseStats.getTotalMs() / (duration * 1000))
-            .speechActivityRatio(1.0 - (pauseStats.getTotalMs() / (duration * 1000)))
+            .silenceRatio(pauseStats.getTotalMs() / (duration))
+            .speechActivityRatio(1.0 - (pauseStats.getTotalMs() / (duration)))
             .timeline(buildTimeline(pitches,volumes))
             .build();
   }

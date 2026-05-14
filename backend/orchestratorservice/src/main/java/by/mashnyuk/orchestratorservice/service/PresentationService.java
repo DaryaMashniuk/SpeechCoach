@@ -5,7 +5,7 @@ import by.mashnyuk.orchestratorservice.model.request.PresentationRequest;
 
 public interface PresentationService {
 
-  Presentation createPresentation(PresentationRequest presentationRequest);
+  Presentation createPresentation(PresentationRequest presentationRequest,Long durationMs);
 
   void deletePresentation(Long id);
 }

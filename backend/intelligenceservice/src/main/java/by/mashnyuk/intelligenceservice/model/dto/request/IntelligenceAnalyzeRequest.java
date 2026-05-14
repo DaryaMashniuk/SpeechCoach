@@ -7,6 +7,6 @@ public record IntelligenceAnalyzeRequest(
         String userId,
         String language,
         String transcriptText,
-        List<TranscriptSegmentDto> transcriptSegments,
+        List<TranscriptionSegment> transcriptSegments,
         AudioMetricsDto audioMetrics
 ) {}

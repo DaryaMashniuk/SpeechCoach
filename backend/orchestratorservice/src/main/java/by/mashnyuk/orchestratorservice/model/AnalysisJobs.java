@@ -41,6 +41,7 @@ public class AnalysisJobs extends Auditable{
   @Column(name = "analysis_type",nullable = false)
   private AnalysisType analysisType;
 
+  @Column(name = "error_message", columnDefinition = "TEXT")
   private String errorMessage;
 
   @Builder.Default

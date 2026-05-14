@@ -1,6 +1,7 @@
 package by.mashnyuk.orchestratorservice.exceptions;
 
-import by.mashnyuk.intelligenceservice.model.dto.response.ErrorResponse;
+
+import by.mashnyuk.orchestratorservice.model.response.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
