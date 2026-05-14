@@ -1,40 +1,70 @@
 package by.mashnyuk.intelligenceservice.util;
 
+import by.mashnyuk.intelligenceservice.model.metrics.NlpDocument;
 import lombok.experimental.UtilityClass;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @UtilityClass
 public class SemanticSimilarityCalculator {
 
-  public double similarity(String a, String b) {
+  public double similarity(
+          NlpDocument a,
+          NlpDocument b
+  ) {
 
-    Set<String> set1 = tokenize(a);
-    Set<String> set2 = tokenize(b);
+    Set<String> set1 =
+            extractContentWords(a);
+
+    Set<String> set2 =
+            extractContentWords(b);
 
     if (set1.isEmpty() || set2.isEmpty()) {
       return 0;
     }
 
-    Set<String> intersection = new HashSet<>(set1);
+    Set<String> intersection =
+            new HashSet<>(set1);
+
     intersection.retainAll(set2);
 
-    Set<String> union = new HashSet<>(set1);
+    Set<String> union =
+            new HashSet<>(set1);
+
     union.addAll(set2);
 
-    return (double) intersection.size() / union.size();
+    return (double)
+            intersection.size()
+            / union.size();
   }
 
-  private Set<String> tokenize(String text) {
+  private Set<String> extractContentWords(
+          NlpDocument doc
+  ) {
 
-    return Arrays.stream(
-                    text.toLowerCase()
-                            .replaceAll("[^a-zа-яё\\s]", "")
-                            .split("\\s+"))
-            .filter(w -> w.length() > 2)
-            .collect(Collectors.toSet());
+    Set<String> result =
+            new HashSet<>();
+
+    for (int i = 0; i < doc.getTokens().size(); i++) {
+
+      String tag =
+              doc.getPosTags().get(i);
+
+      if (
+              tag.startsWith("NN")
+                      || tag.startsWith("VB")
+                      || tag.startsWith("JJ")
+      ) {
+
+        result.add(
+                doc.getTokens()
+                        .get(i)
+                        .toLowerCase()
+        );
+      }
+    }
+
+    return result;
   }
 }

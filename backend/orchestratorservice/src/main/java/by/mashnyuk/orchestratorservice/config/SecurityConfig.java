@@ -32,7 +32,7 @@ public class SecurityConfig {
                             "/error"
                     ).permitAll()
                     .anyRequest()
-                    .permitAll())
+                    .authenticated())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(headersJwtFilter, UsernamePasswordAuthenticationFilter.class)
             .build();

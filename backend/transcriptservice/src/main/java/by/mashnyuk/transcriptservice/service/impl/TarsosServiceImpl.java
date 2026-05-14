@@ -26,7 +26,7 @@ public class TarsosServiceImpl implements DigitalSignalProcessor {
 
   private static final Logger log = LogManager.getLogger();
   private static final float PROBABILITY = 0.8f;
-  private static final int SAMPLE_RATE = 44100;
+  private static final int SAMPLE_RATE = 16000;
   private static final int BUFFER_SIZE = 512;
   private static final int OVERLAP = 0;
 

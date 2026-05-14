@@ -2,9 +2,7 @@ package by.mashnyuk.intelligenceservice.service.impl;
 
 import by.mashnyuk.intelligenceservice.model.metrics.BehavioralMetrics;
 import by.mashnyuk.intelligenceservice.model.metrics.LexicalMetrics;
-import by.mashnyuk.intelligenceservice.model.metrics.PitchDynamicsMetrics;
 import by.mashnyuk.intelligenceservice.model.metrics.ProsodyMetrics;
-import by.mashnyuk.intelligenceservice.model.metrics.RhythmMetrics;
 import by.mashnyuk.intelligenceservice.model.metrics.StructureMetrics;
 import by.mashnyuk.intelligenceservice.service.AiService;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +27,6 @@ public class AiServiceImpl implements AiService {
           IntelligenceAnalyzeRequest request,
           LexicalMetrics lexical,
           ProsodyMetrics prosody,
-          RhythmMetrics rhythm,
-          PitchDynamicsMetrics pitch,
           BehavioralMetrics behavior,
           StructureMetrics structure,
           OverallScore score
@@ -40,23 +36,19 @@ public class AiServiceImpl implements AiService {
             request,
             lexical,
             prosody,
-            rhythm,
-            pitch,
             behavior,
             structure,
             score
     );
 
-    return chatModel.call(prompt);
-    //return "";
+    //return chatModel.call(prompt);
+    return "";
   }
 
   private String buildPrompt(
           IntelligenceAnalyzeRequest request,
           LexicalMetrics lexical,
           ProsodyMetrics prosody,
-          RhythmMetrics rhythm,
-          PitchDynamicsMetrics pitch,
           BehavioralMetrics behavior,
           StructureMetrics structure,
           OverallScore score
@@ -119,9 +111,9 @@ public class AiServiceImpl implements AiService {
             lexical.getLexicalDensity(),
             lexical.getRepetitionsCount(),
 
-            pitch.getPitchRange(),
-            pitch.isMonotone(),
-            rhythm.getRhythmStability(),
+            prosody.getPitchRange(),
+            prosody.isMonotone(),
+            prosody.getRhythmStability(),
             behavior.getNervousnessScore(),
             behavior.getConfidenceScore(),
 
@@ -185,6 +177,8 @@ public class AiServiceImpl implements AiService {
                 5. Дай рекомендации по уверенности и подаче.
                 6. НЕ повторяй метрики буквально.
                 7. Отвечай как живой профессиональный coach.
+            Не просто перечисляй недостатки.
+            Объясняй, как конкретные паттерны речи влияют на восприятие слушателя.
 
                 Формат:
                 - Краткий общий вывод
@@ -199,9 +193,9 @@ public class AiServiceImpl implements AiService {
             lexical.getLexicalDensity(),
             lexical.getRepetitionsCount(),
 
-            pitch.getPitchRange(),
-            pitch.isMonotone(),
-            rhythm.getRhythmStability(),
+            prosody.getPitchRange(),
+            prosody.isMonotone(),
+            prosody.getRhythmStability(),
             behavior.getNervousnessScore(),
             behavior.getConfidenceScore(),
 

@@ -26,7 +26,6 @@ public class WhisperTranscribeProvider implements TranscribeProvider {
 
   private static final Logger logger = LogManager.getLogger(WhisperTranscribeProvider.class);
 
-  //private static final String MODEL_PATH = "../../infrastructure/models/whisper/ggml-base.bin";
   private static final String MODEL_PATH = "backend/infrastructure/models/whisper/ggml-base.bin";
   private static final int STRATEGY_GREEDY = 0;
 
@@ -146,6 +145,7 @@ public class WhisperTranscribeProvider implements TranscribeProvider {
 
     return (nTokens > 0) ? (sumProb / nTokens) : 0.0f;
   }
+
   @PreDestroy
   void shutdown() {
     try {

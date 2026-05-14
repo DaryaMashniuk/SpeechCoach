@@ -25,10 +25,9 @@ public class GatewayConfig {
                     .filters(f -> f.stripPrefix(0))
                     .uri(authUrl))
             .route("orchestrator",r -> r
-                    .path("/api/v1/orchestrator")
+                    .path("/api/v1/orchestrator/**")
                     .filters(f -> f.stripPrefix(0))
                     .uri(orchestratorServiceUrl))
             .build();
-
   }
 }

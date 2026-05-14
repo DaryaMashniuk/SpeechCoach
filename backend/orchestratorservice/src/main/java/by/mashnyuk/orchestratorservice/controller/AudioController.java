@@ -32,8 +32,10 @@ public class AudioController {
   )
   public UUID startTraining(@ModelAttribute PresentationRequest request) throws IOException {
     float[] audioData = audioConverter.convertToWhisperFormat(request.getFile());
+    long durationMs = (long) ((audioData.length / 16000.0) * 1000);
 
-    Presentation presentation = presentationService.createPresentation(request);
+    Presentation presentation = presentationService.createPresentation(request, durationMs);
+
 
     return orchestrationService.startAnalysisForTraining(
             presentation,
@@ -44,8 +46,9 @@ public class AudioController {
   @PostMapping(path = "/meeting", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public UUID startMeeting(@ModelAttribute PresentationRequest request) throws IOException {
     float[] pcmData = audioConverter.convertToWhisperFormat(request.getFile());
+    long durationMs = (long) ((pcmData.length / 16000.0) * 1000);
 
-    Presentation presentation = presentationService.createPresentation(request);
+    Presentation presentation = presentationService.createPresentation(request,durationMs);
     return orchestrationService.startMeetingTranscription(presentation, pcmData);
   }
 

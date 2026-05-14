@@ -1,4 +1,4 @@
-package by.mashnyuk.intelligenceservice.model.metrics;
+package by.mashnyuk.orchestratorservice.model.metrics;
 
 import lombok.Builder;
 import lombok.Data;

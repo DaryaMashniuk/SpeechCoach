@@ -10,4 +10,5 @@ public class OverallScore {
   private double delivery;
   private double clarity;
   private double engagement;
+  private double structure;
 }

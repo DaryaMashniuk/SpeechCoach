@@ -2,12 +2,12 @@ package by.mashnyuk.orchestratorservice.service.impl;
 
 import by.mashnyuk.orchestratorservice.model.AnalysisResults;
 import by.mashnyuk.orchestratorservice.model.response.IntelligenceAnalyzeResponse;
+import by.mashnyuk.orchestratorservice.model.response.MeetingTranscriptionResult;
 import by.mashnyuk.orchestratorservice.repository.AnalysisResultsRepository;
 import by.mashnyuk.orchestratorservice.service.AnalysisResultsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -18,16 +18,20 @@ public class AnalysisResultsServiceImpl implements AnalysisResultsService {
 
   @Override
   public void saveAnalysisResult(UUID jobId, IntelligenceAnalyzeResponse response) {
-    // TODO sync dto from Intelligence service to the one saved in the result
     AnalysisResults result = AnalysisResults.builder()
             .analysisJobId(jobId)
-            .transcript(response.transcription())
-            .tips(response.tips())
-            .scores(Map.of(
-                 "logic",response.scoreLogic(),
-                 "clarity",response.scoreClarity(),
-                 "confidence",response.scoreConfidence()
-            ))
+            .fullReport(response)
+            .modelVersion("llama3.2-speech-v1")
+            .build();
+    analysisResultsRepository.save(result);
+  }
+
+  @Override
+  public void saveTranscriptionResult(UUID jobId, MeetingTranscriptionResult transcriptionResult) {
+    AnalysisResults result = AnalysisResults.builder()
+            .analysisJobId(jobId)
+            .meetingTranscriptionResult(transcriptionResult)
+            .modelVersion("llama3.2-speech-v1")
             .build();
     analysisResultsRepository.save(result);
   }
