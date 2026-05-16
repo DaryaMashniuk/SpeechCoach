@@ -5,4 +5,5 @@ import by.mashnyuk.intelligenceservice.model.dto.response.IntelligenceAnalyzeRes
 
 public interface IntelligenceAnalysisService {
   IntelligenceAnalyzeResponse fullAnalysis(IntelligenceAnalyzeRequest request);
+  String summary(String text,String language);
 }

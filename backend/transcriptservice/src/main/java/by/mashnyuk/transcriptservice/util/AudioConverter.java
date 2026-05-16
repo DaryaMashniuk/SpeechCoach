@@ -20,12 +20,7 @@ public class AudioConverter {
   private String ffmpegPath;
 
   public float[] convertToWhisperFormat(MultipartFile multipartFile) throws IOException {
-    // Команда:
-    // -i pipe:0  : читать входные данные из стандартного ввода (stdin)
-    // -ar 16000  : частота 16кГц
-    // -ac 1      : моно
-    // -f f32le   : формат 32-bit float
-    // pipe:1     : писать результат в стандартный вывод (stdout)
+
     System.out.println(ffmpegPath);
     File ffmpegFile = new File(ffmpegPath);
 

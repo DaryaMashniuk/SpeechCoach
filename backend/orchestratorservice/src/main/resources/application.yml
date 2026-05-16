@@ -1,4 +1,11 @@
 spring:
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 5000
+            read-timeout: 300000
   application:
     name: orchestrator-service
   jpa:

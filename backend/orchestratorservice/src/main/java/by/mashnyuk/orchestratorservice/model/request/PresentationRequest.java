@@ -26,4 +26,8 @@ public class PresentationRequest {
 
   private boolean training = Boolean.TRUE;
 
+  private Language translatingLanguage;
+
+  private boolean translated;
+
 }

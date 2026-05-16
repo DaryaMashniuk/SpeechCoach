@@ -10,13 +10,13 @@ import by.mashnyuk.orchestratorservice.model.request.TranscriptionSegment;
 import java.util.List;
 
 
-public record IntelligenceAnalyzeResponse(
+public record IntelligenceAnalyzeResponse (
         String presentationId,
 
         double scoreLogic,
         double scoreClarity,
         double scoreConfidence,
-        double scoreTopicAdherence,
+        double overallScore,
 
         LexicalMetrics lexical,
         ProsodyMetrics prosody,
@@ -29,5 +29,14 @@ public record IntelligenceAnalyzeResponse(
         List<String> keyErrors,
         List<String> tips,
         String summary,
-        String transcript
-) {}
+        String transcript,
+        String title,
+        String audioUrl
+) {
+  public IntelligenceAnalyzeResponse withAudioUrl(String url) {
+  return new IntelligenceAnalyzeResponse(
+          presentationId, scoreLogic, scoreClarity, scoreConfidence, overallScore,
+          lexical, prosody, behavior, structure, transcriptSegments, audioMetrics,
+          keyErrors, tips, summary, transcript,title, url
+  );
+}}

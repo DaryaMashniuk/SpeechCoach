@@ -4,6 +4,6 @@ import by.mashnyuk.transcriptservice.model.dto.request.TranscriptionRequest;
 import by.mashnyuk.transcriptservice.model.dto.response.TranscriptionResult;
 
 public interface TranscribeProvider {
-  TranscriptionResult transcribe(TranscriptionRequest request);
+  TranscriptionResult transcribe(float[] pcmData, String language, boolean translate);
   String providerName();
 }

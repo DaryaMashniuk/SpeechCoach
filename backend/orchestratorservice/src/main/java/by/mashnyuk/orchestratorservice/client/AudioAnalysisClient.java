@@ -1,12 +1,13 @@
 package by.mashnyuk.orchestratorservice.client;
 
-import by.mashnyuk.orchestratorservice.model.request.TranscriptionRequest;
 import by.mashnyuk.orchestratorservice.model.response.AudioAnalysisResult;
 import by.mashnyuk.orchestratorservice.model.response.TranscriptionResult;
-import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 @FeignClient(
         name = "transcriptionService",
@@ -14,9 +15,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 )
 public interface AudioAnalysisClient {
 
-  @PostMapping("/api/v1/transcription")
-  AudioAnalysisResult audioAnalysis(TranscriptionRequest transcriptionRequest);
+  @PostMapping(value = "/api/v1/transcription", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  AudioAnalysisResult audioAnalysis(
+          @RequestPart("file") MultipartFile file,
+          @RequestParam("language") String language
+  );
 
-  @PostMapping("/api/v1/transcription/transcribe")
-  TranscriptionResult transcribe(@RequestBody @Valid TranscriptionRequest request);
+  @PostMapping(value = "/api/v1/transcription/meeting", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  TranscriptionResult transcribeMeeting(
+          @RequestPart("file") MultipartFile file,
+          @RequestParam("language") String language,
+          @RequestParam("translate") boolean translate
+  );
 }

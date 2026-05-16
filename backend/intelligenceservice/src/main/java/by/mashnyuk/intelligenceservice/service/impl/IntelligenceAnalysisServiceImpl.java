@@ -93,7 +93,7 @@ public class IntelligenceAnalysisServiceImpl implements IntelligenceAnalysisServ
             .scoreLogic(score.getClarity())
             .scoreClarity(lexical.getLexicalDensity())
             .scoreConfidence(score.getDelivery())
-            .scoreTopicAdherence(score.getOverall())
+            .overallScore(score.getOverall())
 
             .lexical(lexical)
             .prosody(prosody)
@@ -105,8 +105,12 @@ public class IntelligenceAnalysisServiceImpl implements IntelligenceAnalysisServ
 
             .tips(List.of(aiFeedback.split("\n")))
             .transcript(request.transcriptText())
+            .title(request.title())
             .build();
   }
 
-
+  @Override
+  public String summary(String text,String language) {
+    return aiService.generateSummary(text,language);
+  }
 }

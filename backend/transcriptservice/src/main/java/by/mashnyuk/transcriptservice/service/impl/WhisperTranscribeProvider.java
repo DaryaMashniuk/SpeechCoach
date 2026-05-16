@@ -18,6 +18,7 @@ import java.lang.foreign.ValueLayout;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static by.mashnyuk.transcriptservice.nativelib.WhisperLib.*;
 
@@ -57,77 +58,65 @@ public class WhisperTranscribeProvider implements TranscribeProvider {
     }
   }
 
-  @Override
-  public TranscriptionResult transcribe(TranscriptionRequest request) {
+  public TranscriptionResult transcribe(float[] pcmData, String language, boolean needTranslation) {
     if (ctx == null || ctx.equals(MemorySegment.NULL)) {
       throw new TranscriptionException("Whisper engine is not initialized");
     }
 
     try (Arena arena = Arena.ofConfined()) {
-
       MemorySegment params = whisper_full_default_params(arena, STRATEGY_GREEDY);
 
-      if (request.getLanguage() != null) {
-        MemorySegment lan = arena.allocateFrom(request.getLanguage().toString());
-        whisper_full_params.language(params,lan);
+      if (language != null && !language.equalsIgnoreCase("auto")) {
+        MemorySegment lan = arena.allocateFrom(language.toLowerCase());
+        whisper_full_params.language(params, lan);
       }
-      whisper_full_params.n_threads(params, Runtime.getRuntime().availableProcessors());
+      whisper_full_params.n_threads(params, Math.max(1, Runtime.getRuntime().availableProcessors() - 1));
       whisper_full_params.token_timestamps(params, true);
       whisper_full_params.split_on_word(params, true);
-      whisper_full_params.max_len(params,1);
-
-      whisper_full_params.translate(params,false);
-      float[] pcmData = request.getPcmData();
       MemorySegment audioBuffer = arena.allocateFrom(ValueLayout.JAVA_FLOAT, pcmData);
-      
-      int result = whisper_full(
-              ctx,
-              params,
-              audioBuffer,
-              pcmData.length);
 
-      if (result != 0) {
-        logger.error("Whisper inference failed with code: {}", result);
-        throw new TranscriptionException("Inference failed with code: " + result);
+      whisper_full_params.translate(params, false);
+      if (whisper_full(ctx, params, audioBuffer, pcmData.length) != 0) {
+        throw new TranscriptionException("Original transcription failed");
       }
 
-      StringBuilder text = new StringBuilder();
-      int nSegments = whisper_full_n_segments(ctx);
-      List<TranscriptionSegment> segments = new ArrayList<>(nSegments);
-      for (int i = 0; i < nSegments; i++) {
-        MemorySegment segmentPtr = whisper_full_get_segment_text(ctx, i);
-        String segmentText = segmentPtr.getString(0).trim();
-        long t0 = whisper_full_get_segment_t0(ctx, i) * 10;
-        long t1 = whisper_full_get_segment_t1(ctx, i) * 10;
+      List<TranscriptionSegment> originalSegments = extractSegments();
+      String originalText = assembleText(originalSegments);
 
-        float silenceProbability = whisper_full_get_segment_no_speech_prob(ctx, i);
-        float confidence = countConfidence(i);
-        TranscriptionSegment segment = TranscriptionSegment.builder()
-                .start(t0)
-                .end(t1)
-                .text(segmentText)
-                .silenceProbability(silenceProbability)
-                .confidence(confidence)
-                .build();
-        segments.add(segment);
-        text.append(segmentText).append(" ");
+      List<TranscriptionSegment> translatedSegments = null;
+      String translatedText = null;
+
+      if (needTranslation) {
+        whisper_full_params.translate(params, true);
+        if (whisper_full(ctx, params, audioBuffer, pcmData.length) == 0) {
+          translatedSegments = extractSegments();
+          translatedText = assembleText(translatedSegments);
+        }
       }
 
-      return new TranscriptionResult(segments, text.toString().trim());
-
-    } catch (Exception e) {
-      logger.error("Error during transcription", e);
-      throw new TranscriptionException("Transcription error: " + e.getMessage());
+      return new TranscriptionResult(originalSegments, originalText,translatedSegments, translatedText);
     }
   }
 
-  private String formatFullTime(long totalMillis) {
+  private List<TranscriptionSegment> extractSegments() {
+    int nSegments = whisper_full_n_segments(ctx);
+    List<TranscriptionSegment> list = new ArrayList<>(nSegments);
+    for (int i = 0; i < nSegments; i++) {
+      String text = whisper_full_get_segment_text(ctx, i).getString(0).trim();
+      long t0 = whisper_full_get_segment_t0(ctx, i) * 10;
+      long t1 = whisper_full_get_segment_t1(ctx, i) * 10;
+      float silence = whisper_full_get_segment_no_speech_prob(ctx, i);
+      float conf = countConfidence(i);
 
-    long hours = totalMillis / 3600000;
-    long minutes = (totalMillis % 3600000) / 60000;
-    long seconds = (totalMillis % 60000) / 1000;
-    long millis = totalMillis % 1000;
-    return String.format("%02d:%02d:%02d:%03d", hours, minutes, seconds, millis);
+      list.add(new TranscriptionSegment(text, t0, t1, conf, silence));
+    }
+    return list;
+  }
+
+  private String assembleText(List<TranscriptionSegment> segments) {
+    return segments.stream()
+            .map(TranscriptionSegment::text)
+            .collect(Collectors.joining(" "));
   }
 
   @Override

@@ -18,7 +18,7 @@ public record IntelligenceAnalyzeResponse(
         double scoreLogic,
         double scoreClarity,
         double scoreConfidence,
-        double scoreTopicAdherence,
+        double overallScore,
 
         LexicalMetrics lexical,
         ProsodyMetrics prosody,
@@ -31,5 +31,6 @@ public record IntelligenceAnalyzeResponse(
         List<String> keyErrors,
         List<String> tips,
         String summary,
-        String transcript
+        String transcript,
+        String title
 ) {}
