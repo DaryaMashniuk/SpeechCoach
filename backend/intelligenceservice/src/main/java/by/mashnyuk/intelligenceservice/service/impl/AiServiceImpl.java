@@ -41,8 +41,21 @@ public class AiServiceImpl implements AiService {
             score
     );
 
-    //return chatModel.call(prompt);
-    return "";
+    return chatModel.call(prompt);
+    //return "";
+  }
+
+  @Override
+  public String generateSummary(String transcript,String language) {
+
+    String prompt = buildGeneralSummaryPrompt(transcript,language);
+
+    try {
+      return chatModel.call(prompt);
+    } catch (Exception e) {
+      log.error("Summary generation failed", e);
+      return "Не удалось создать краткое описание.";
+    }
   }
 
   private String buildPrompt(
@@ -53,162 +66,146 @@ public class AiServiceImpl implements AiService {
           StructureMetrics structure,
           OverallScore score
   ) {
-
-    log.info("""
-                Ты профессиональный speech coach.
-
-                Проанализируй выступление.
-
-                Язык выступления: %s
-
-                === Лексика ===
-                - Темп речи: %.1f WPM
-                - Слова-паразиты: %d
-                - Лексическое разнообразие: %.2f
-                - Лексическая плотность: %.2f
-                - Повторы мыслей: %d
-
-                === Голос и ритм ===
-                - Диапазон интонации: %.2f
-                - Монотонность: %s
-                - Стабильность ритма: %.2f
-                - Нервозность: %.2f
-                - Уверенность: %.2f
-
-                === Структура ===
-                - Связность речи: %.2f
-                - Аргументация: %.2f
-                - Переходы между мыслями: %.2f
-                - Скачки между темами: %d
-                - Есть вступление: %s
-                - Есть заключение: %s
-
-                === Общая оценка ===
-                - Итоговый score: %.1f
-
-                Текст выступления:
-                %s
-
-                Задача:
-                1. Проанализируй качество выступления.
-                2. Объясни слабые места.
-                3. Объясни что звучит хорошо.
-                4. Дай рекомендации по улучшению структуры.
-                5. Дай рекомендации по уверенности и подаче.
-                6. НЕ повторяй метрики буквально.
-                7. Отвечай как живой профессиональный coach.
-
-                Формат:
-                - Краткий общий вывод
-                - 3-5 рекомендаций
-                - Позитивное завершение
-                """.formatted(
-            request.language(),
-
-            lexical.getWpm(),
-            lexical.getFillerCount(),
-            lexical.getLexicalVariety(),
-            lexical.getLexicalDensity(),
-            lexical.getRepetitionsCount(),
-
-            prosody.getPitchRange(),
-            prosody.isMonotone(),
-            prosody.getRhythmStability(),
-            behavior.getNervousnessScore(),
-            behavior.getConfidenceScore(),
-
-            structure.getCoherenceScore(),
-            structure.getArgumentationScore(),
-            structure.getTransitionScore(),
-            structure.getTopicJumps(),
-            structure.isHasIntroduction(),
-            structure.isHasConclusion(),
-
-            score.getOverall(),
-
-            request.transcriptText()
-    ));
     String structureNote = structure.isSupportedByHeuristics()
-            ? "Данные структуры рассчитаны на основе лингвистических маркеров."
-            : "Внимание: Детальный структурный анализ для этого языка недоступен. Пожалуйста, проанализируй структуру текста самостоятельно на основе семантики.";
+            ? "Structural signals are based on detected linguistic markers."
+            : "Detailed heuristic structure analysis is unavailable for this language; infer structure from the transcript itself.";
+
+    String language = request.language();
+    String audioLanguageName = switch (language.toLowerCase()) {
+      case "ru" -> "Russian";
+      case "en" -> "English";
+      case "de" -> "German";
+      default -> language;
+    };
 
     return """
-                Ты профессиональный speech coach.
+You are a professional speech coach.
 
-                Проанализируй выступление.
+IMPORTANT RULES:
+- Reply strictly in %s.
+- Do not mix languages.
+- Do not repeat metrics verbatim.
+- Use the metrics as evidence, but explain them in natural language.
+- Be specific, confident, and constructive.
+- Focus on the speaker's delivery, structure, clarity, and confidence.
 
-                Язык выступления: %s
+SPEECH CONTEXT:
+- Language: %s
 
-                === Заметки анализатора ===
-                    %s
-                === Лексика ===
-                - Темп речи: %.1f WPM
-                - Слова-паразиты: %d
-                - Лексическое разнообразие: %.2f
-                - Лексическая плотность: %.2f
-                - Повторы мыслей: %d
+ANALYSIS SIGNALS:
+- Lexical:
+  - WPM: %.1f
+  - Filler words: %d
+  - Lexical variety: %.2f
+  - Lexical density: %.2f
+  - Repetitions: %d
+- Voice and rhythm:
+  - Pitch range: %.2f
+  - Monotone: %s
+  - Rhythm stability: %.2f
+  - Nervousness: %.2f
+  - Confidence: %.2f
+- Structure:
+  - Coherence: %.2f
+  - Argumentation: %.2f
+  - Transitions: %.2f
+  - Topic jumps: %d
+  - Has introduction: %s
+  - Has conclusion: %s
+- Overall score: %.1f
 
-                === Голос и ритм ===
-                - Диапазон интонации: %.2f
-                - Монотонность: %s
-                - Стабильность ритма: %.2f
-                - Нервозность: %.2f
-                - Уверенность: %.2f
+STRUCTURE NOTE:
+%s
 
-                === Структура ===
-                - Связность речи: %.2f
-                - Аргументация: %.2f
-                - Переходы между мыслями: %.2f
-                - Скачки между темами: %d
-                - Есть вступление: %s
-                - Есть заключение: %s
+TRANSCRIPT:
+%s
 
-                === Общая оценка ===
-                - Итоговый score: %.1f
+TASK:
+1. Give a short overall verdict.
+2. Explain the strongest points.
+3. Explain the weakest points.
+4. Give 3-5 actionable improvements.
+5. End with an encouraging note.
 
-                Текст выступления:
-                %s
+OUTPUT FORMAT:
+**Verdict**
+...one short paragraph...
 
-                Задача:
-                1. Проанализируй качество выступления.
-                2. Объясни слабые места.
-                3. Объясни что звучит хорошо.
-                4. Дай рекомендации по улучшению структуры.
-                5. Дай рекомендации по уверенности и подаче.
-                6. НЕ повторяй метрики буквально.
-                7. Отвечай как живой профессиональный coach.
-            Не просто перечисляй недостатки.
-            Объясняй, как конкретные паттерны речи влияют на восприятие слушателя.
+**What works well**
+- ...
+- ...
 
-                Формат:
-                - Краткий общий вывод
-                - 3-5 рекомендаций
-                - Позитивное завершение
-                """.formatted(
-            request.language(),
-            structureNote,
+**What to improve**
+- ...
+- ...
+
+**Recommendations**
+1. ...
+2. ...
+3. ...
+
+**Closing**
+...short encouraging ending...
+""".formatted(
+            audioLanguageName,
+            audioLanguageName,
             lexical.getWpm(),
             lexical.getFillerCount(),
             lexical.getLexicalVariety(),
             lexical.getLexicalDensity(),
             lexical.getRepetitionsCount(),
-
             prosody.getPitchRange(),
             prosody.isMonotone(),
             prosody.getRhythmStability(),
             behavior.getNervousnessScore(),
             behavior.getConfidenceScore(),
-
             structure.getCoherenceScore(),
             structure.getArgumentationScore(),
             structure.getTransitionScore(),
             structure.getTopicJumps(),
             structure.isHasIntroduction(),
             structure.isHasConclusion(),
-
             score.getOverall(),
-
+            structureNote,
             request.transcriptText()
     );
+  }
+
+  public String buildGeneralSummaryPrompt(String transcript, String language) {
+    String outputLanguage = switch (language.toLowerCase()) {
+      case "ru" -> "Russian";
+      case "en" -> "English";
+      case "de" -> "German";
+      default -> language;
+    };
+
+    return """
+You are a concise summarization assistant.
+
+IMPORTANT RULES:
+- Reply strictly in %s.
+- Do not mix languages.
+- Summarize only the meaningful content.
+- Ignore filler words, repetitions, false starts, and transcription noise.
+- Do not quote the transcript.
+- Do not add information that is not present in the text.
+- Keep the answer short, clear, and natural.
+
+TRANSCRIPT:
+%s
+
+TASK:
+1. State the main topic in one sentence.
+2. List 3-5 key ideas or facts.
+3. Describe the overall tone or context in 1 short sentence.
+
+OUTPUT FORMAT:
+**Main topic:** ...
+**Key ideas:**
+- ...
+- ...
+- ...
+**Tone / context:** ...
+""".formatted(outputLanguage, transcript);
   }
 }

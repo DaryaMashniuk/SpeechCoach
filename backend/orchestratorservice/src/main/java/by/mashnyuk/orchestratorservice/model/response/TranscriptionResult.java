@@ -10,4 +10,6 @@ import java.util.List;
 public class TranscriptionResult {
   List<TranscriptionSegment> segments;
   String transcription;
+  List<TranscriptionSegment> translatedSegments;
+  String translatedText;
 }

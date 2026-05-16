@@ -45,4 +45,6 @@ public class AnalysisResults extends Auditable {
   private MeetingTranscriptionResult meetingTranscriptionResult;
 
   private String modelVersion;
+
+  private String translatedText;
 }

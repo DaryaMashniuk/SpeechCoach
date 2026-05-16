@@ -13,7 +13,6 @@ import by.mashnyuk.authservice.model.dto.request.RegistrationDto;
 import by.mashnyuk.authservice.model.UserInfo;
 import by.mashnyuk.authservice.model.Roles;
 
-import java.time.LocalDate;
 
 
 @Component
@@ -33,10 +32,6 @@ public class AdminInitializer implements CommandLineRunner {
                 .username("admin")
                 .password("Secure@Pass123")
                 .email("admin@innowise.com")
-                .name("Admin")
-                .surname("System")
-                .birthDate(LocalDate.of(1990, 1, 1))
-                .active(true)
                 .build();
 
         authService.save(adminDto);

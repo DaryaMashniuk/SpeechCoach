@@ -24,7 +24,6 @@ import java.util.List;
 @Component
 public class TarsosServiceImpl implements DigitalSignalProcessor {
 
-  private static final Logger log = LogManager.getLogger();
   private static final float PROBABILITY = 0.8f;
   private static final int SAMPLE_RATE = 16000;
   private static final int BUFFER_SIZE = 512;
@@ -57,8 +56,6 @@ public class TarsosServiceImpl implements DigitalSignalProcessor {
 
       if (probability > PROBABILITY){
         pitchList.add(new PitchesData(event.getTimeStamp(),pitch));
-        log.info("Pitch at:" + event.getTimeStamp() + ", " + pitch + "pitch" + event.getdBSPL() + " dB SPL\n");
-        //TODO Standard Deviation
       }
     };
     return new PitchProcessor(PitchProcessor.PitchEstimationAlgorithm.YIN,SAMPLE_RATE,BUFFER_SIZE,handler);

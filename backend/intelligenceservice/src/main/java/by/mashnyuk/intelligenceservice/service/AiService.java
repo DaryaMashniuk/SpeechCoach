@@ -16,4 +16,5 @@ public interface AiService {
           StructureMetrics structure,
           OverallScore score
   );
+  public String generateSummary(String transcript,String language);
 }

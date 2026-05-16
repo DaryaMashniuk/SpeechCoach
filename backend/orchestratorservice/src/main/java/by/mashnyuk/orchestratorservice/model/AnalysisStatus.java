@@ -7,5 +7,4 @@ public enum AnalysisStatus {
   WAITING_INTELLIGENCE_SERVICE,
   DONE,
   FAILED,
-  COMPLETED,
 }

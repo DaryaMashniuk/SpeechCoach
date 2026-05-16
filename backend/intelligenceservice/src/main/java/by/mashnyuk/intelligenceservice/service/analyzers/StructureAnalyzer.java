@@ -34,18 +34,15 @@ public class StructureAnalyzer {
     boolean intro = detectIntroduction(sentences);
     boolean conclusion = detectConclusion(sentences);
 
-    // Вычисляем глобальные веса слов ОДИН раз
     Map<String, Double> globalWordWeights = calculateGlobalWordWeights(doc);
 
     double coherence = calculateCoherence(sentences, doc, globalWordWeights);
     int topicJumps = detectTopicJumps(sentences);
 
-// Более мягкая формула консистентности
     double consistency;
     if (sentences.size() < 3) {
       consistency = 1.0;
     } else {
-      // Используем логарифмическую шкалу для более плавного спада
       double jumpRatio = (double) topicJumps / (sentences.size() - 1);
       consistency = Math.max(0, 1 - Math.log1p(jumpRatio * 5) / Math.log1p(5));
 
@@ -83,7 +80,6 @@ public class StructureAnalyzer {
       return weights;
     }
 
-    // Считаем в скольких предложениях встречается каждое значимое слово
     Map<String, Integer> wordSentenceCount = new HashMap<>();
 
     for (String sentence : sentences) {
@@ -93,7 +89,6 @@ public class StructureAnalyzer {
       }
     }
 
-    // Вычисляем IDF-подобный вес: чем в меньшем числе предложений слово, тем оно специфичнее
     int totalSentences = sentences.size();
     for (Map.Entry<String, Integer> entry : wordSentenceCount.entrySet()) {
       double idf = Math.log((double) totalSentences / entry.getValue());
